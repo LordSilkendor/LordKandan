@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260715-7" />
+  <link rel="stylesheet" href="styles.css?v=20260715-8" />
   <style>
     .auth-screen{position:fixed!important;inset:0!important;z-index:1000!important;background:#f4f1eb!important;display:grid!important;place-items:center!important;padding:20px!important}
     .auth-screen[hidden]{display:none!important}
@@ -54,7 +54,7 @@
       <div class="modal-handle"></div>
       <div class="modal-head"><div><p class="eyebrow">OPPGAVE</p><h2 id="actionTitle">Oppgave</h2></div><button type="button" class="close-btn" id="closeActions">×</button></div>
       <div class="task-people" id="taskPeople"></div>
-      <label for="actionDeadline">Hovedfrist</label><input id="actionDeadline" type="date">
+      <div class="task-info-field"><label for="actionDeadline"><span class="field-icon">◷</span><span><strong>Hovedfrist</strong><small>Frist for hele oppgaven</small></span></label><input id="actionDeadline" type="date"></div>
       <label for="actionCategory">Kategori</label><select id="actionCategory"></select>
       <p class="action-label">Flytt til</p><div class="move-options" id="moveOptions"></div>
       <div class="subtask-section"><div class="subtask-head"><p class="action-label">Underoppgaver</p><span id="subtaskProgress"></span></div><div id="subtaskList"></div><div class="subtask-add"><input id="newSubtaskTitle" placeholder="Ny underoppgave …"><button id="addSubtask" type="button" aria-label="Legg til underoppgave">＋</button></div></div>
@@ -68,7 +68,7 @@
       <div class="modal-head"><div><p class="eyebrow">NY OPPGAVE</p><h2>Hva skal gjøres?</h2></div><button type="button" class="close-btn" id="closeModal">×</button></div>
       <label for="taskTitle">Tittel</label>
       <input id="taskTitle" name="title" placeholder="Skriv en tydelig oppgave …" maxlength="80" required />
-      <label for="taskDeadline">Hovedfrist</label><input id="taskDeadline" name="deadline" type="date" />
+      <div class="task-info-field create-deadline"><label for="taskDeadline"><span class="field-icon">◷</span><span><strong>Hovedfrist</strong><small>Valgfritt</small></span></label><input id="taskDeadline" name="deadline" type="date" /></div>
       <div class="form-row">
         <div><label for="taskColumn">Kolonne</label><select id="taskColumn" name="column"></select></div>
         <div><label for="taskTag">Kategori</label><select id="taskTag" name="tag"></select></div>
@@ -126,6 +126,6 @@
     <form class="auth-card" id="loginForm"><span class="brand-mark">L</span><p class="eyebrow">LORD'S KANDAN BOARD</p><h1>Logg inn</h1><p class="auth-copy">Skriv inn e-postadressen din. Du får en sikker innloggingslenke på e-post.</p><label for="loginEmail">E-post</label><input id="loginEmail" type="email" autocomplete="email" placeholder="navn@eksempel.no" required><button class="primary-btn" type="submit">Send innloggingslenke</button><p class="auth-status" id="authStatus"></p></form>
   </div>
   <script src="supabase-config.js?v=20260715-2"></script>
-  <script src="app.js?v=20260715-7"></script>
+  <script src="app.js?v=20260715-8"></script>
 </body>
 </html>
