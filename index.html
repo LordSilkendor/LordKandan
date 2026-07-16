@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260715-9" />
+  <link rel="stylesheet" href="styles.css?v=20260716-1" />
   <style>
     .auth-screen{position:fixed!important;inset:0!important;z-index:1000!important;background:#f4f1eb!important;display:grid!important;place-items:center!important;padding:20px!important}
     .auth-screen[hidden]{display:none!important}
@@ -21,7 +21,7 @@
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <a class="brand" href="#" aria-label="Lord's Kandan Board hjem"><span class="brand-mark">L</span><span>Lord's Kandan Board</span></a><div class="account-actions"><button class="admin-users-btn" id="adminUsersButton" type="button" hidden>Admin</button><button class="account-btn" id="accountButton" type="button" hidden><span id="accountEmail"></span><span>Logg ut</span></button></div>
+      <a class="brand" href="#" aria-label="Lord's Kandan Board hjem"><span class="brand-mark">L</span><span>Lord's Kandan Board</span></a><nav class="view-switch" aria-label="Visning"><button class="view-btn active" id="showBoard" type="button">▦ Board</button><button class="view-btn" id="showRoadmap" type="button">◇ Roadmap</button></nav><div class="account-actions"><button class="admin-users-btn" id="adminUsersButton" type="button" hidden>Admin</button><button class="account-btn" id="accountButton" type="button" hidden><span id="accountEmail"></span><span>Logg ut</span></button></div>
     </header>
 
     <main>
@@ -32,7 +32,7 @@
         </div>
       </section>
 
-      <div class="toolbar">
+      <div id="boardView"><div class="toolbar">
         <div class="task-summary"><span class="task-total" id="taskTotal"></span><button class="new-task-btn" id="newTaskButton" type="button">＋ Ny oppgave</button></div>
         <button class="filter-btn" id="filterToggle" aria-expanded="false"><span>☷</span> Filtrer <span class="filter-count" id="filterCount" hidden>0</span></button>
       </div>
@@ -45,7 +45,9 @@
 
       <nav class="mobile-tabs" id="mobileTabs" aria-label="Velg kolonne"></nav>
 
-      <section class="board" id="board" aria-label="Kanban-tavle"></section>
+      <section class="board" id="board" aria-label="Kanban-tavle"></section></div>
+
+      <section class="roadmap-view" id="roadmapView" hidden><div class="roadmap-head"><div><p class="eyebrow">PROSJEKTROADMAP</p><h2 id="roadmapTitle"></h2><p>Fremdrift basert på oppgavene som er koblet til hver milepæl.</p></div><div class="overall-progress"><span>Total fremdrift</span><strong id="overallPercent">0%</strong><div class="roadmap-progress"><span id="overallBar"></span></div></div></div><div class="milestone-list" id="milestoneList"></div><button class="new-milestone-btn" id="newMilestone" type="button">＋ Ny milepæl</button></section>
     </main>
   </div>
 
@@ -55,7 +57,7 @@
       <div class="modal-head"><div><p class="eyebrow">OPPGAVE</p><h2 id="actionTitle">Oppgave</h2></div><button type="button" class="close-btn" id="closeActions">×</button></div>
       <div class="task-people" id="taskPeople"></div>
       <div class="task-info-field"><label for="actionDeadline"><span class="field-icon">◷</span><span><strong>Hovedfrist</strong><small>Frist for hele oppgaven</small></span></label><input id="actionDeadline" type="date"></div>
-      <label for="actionCategory">Kategori</label><select id="actionCategory"></select>
+      <label>Kategorier</label><div class="task-category-picker" id="actionCategory"></div>
       <p class="action-label">Flytt til</p><div class="move-options" id="moveOptions"></div>
       <div class="subtask-section"><div class="subtask-head"><p class="action-label">Underoppgaver</p><span id="subtaskProgress"></span></div><div id="subtaskList"></div><div class="subtask-add"><input id="newSubtaskTitle" placeholder="Ny underoppgave …"><button id="addSubtask" type="button" aria-label="Legg til underoppgave">＋</button></div></div>
       <button class="delete-btn" id="deleteTask" type="button">Slett oppgave</button>
@@ -71,7 +73,7 @@
       <div class="task-info-field create-deadline"><label for="taskDeadline"><span class="field-icon">◷</span><span><strong>Hovedfrist</strong><small>Valgfritt</small></span></label><input id="taskDeadline" name="deadline" type="date" /></div>
       <div class="form-row">
         <div><label for="taskColumn">Kolonne</label><select id="taskColumn" name="column"></select></div>
-        <div><label for="taskTag">Kategori</label><select id="taskTag" name="tag"></select></div>
+        <div><label>Kategorier</label><div class="task-category-picker" id="taskTag"></div></div>
       </div>
       <button class="primary-btn" type="submit">Legg til oppgave</button>
     </form>
@@ -121,11 +123,13 @@
 
   <div class="modal-backdrop" id="assigneeDialog" hidden><div class="task-modal assignee-sheet"><div class="modal-handle"></div><div class="modal-head"><div><p class="eyebrow">UNDEROPPGAVE</p><h2>Tildel personer</h2></div><button type="button" class="close-btn" id="closeAssignees">×</button></div><div id="assigneeList"></div><button class="primary-btn" id="saveAssignees" type="button">Ferdig</button></div></div>
 
+  <div class="modal-backdrop" id="milestoneModal" hidden><form class="task-modal milestone-modal" id="milestoneForm"><div class="modal-handle"></div><div class="modal-head"><div><p class="eyebrow">ROADMAP</p><h2 id="milestoneModalTitle">Ny milepæl</h2></div><button type="button" class="close-btn" id="closeMilestone">×</button></div><label for="milestoneName">Navn</label><input id="milestoneName" maxlength="60" required><label for="milestoneDeadline">Frist</label><input id="milestoneDeadline" type="date"><label>Koble til oppgaver</label><div class="milestone-task-list" id="milestoneTasks"></div><div class="milestone-actions"><button class="delete-btn" id="deleteMilestone" type="button" hidden>Slett milepæl</button><button class="primary-btn" type="submit">Lagre milepæl</button></div></form></div>
+
   <div class="toast" id="toast" role="status"></div>
   <div class="auth-screen" id="authScreen">
     <form class="auth-card" id="loginForm"><span class="brand-mark">L</span><p class="eyebrow">LORD'S KANDAN BOARD</p><h1>Logg inn</h1><p class="auth-copy">Skriv inn e-postadressen din. Du får en sikker innloggingslenke på e-post.</p><label for="loginEmail">E-post</label><input id="loginEmail" type="email" autocomplete="email" placeholder="navn@eksempel.no" required><button class="primary-btn" type="submit">Send innloggingslenke</button><p class="auth-status" id="authStatus"></p></form>
   </div>
   <script src="supabase-config.js?v=20260715-2"></script>
-  <script src="app.js?v=20260715-9"></script>
+  <script src="app.js?v=20260716-1"></script>
 </body>
 </html>
