@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260716-1" />
+  <link rel="stylesheet" href="styles.css?v=20260716-2" />
   <style>
     .auth-screen{position:fixed!important;inset:0!important;z-index:1000!important;background:#f4f1eb!important;display:grid!important;place-items:center!important;padding:20px!important}
     .auth-screen[hidden]{display:none!important}
@@ -58,6 +58,7 @@
       <div class="task-people" id="taskPeople"></div>
       <div class="task-info-field"><label for="actionDeadline"><span class="field-icon">◷</span><span><strong>Hovedfrist</strong><small>Frist for hele oppgaven</small></span></label><input id="actionDeadline" type="date"></div>
       <label>Kategorier</label><div class="task-category-picker" id="actionCategory"></div>
+      <div class="task-milestone-field"><span>Milepæler</span><button id="taskMilestoneToggle" type="button">◇ Koble til milepæl</button><div class="task-milestone-menu" id="taskMilestoneMenu" hidden></div></div>
       <p class="action-label">Flytt til</p><div class="move-options" id="moveOptions"></div>
       <div class="subtask-section"><div class="subtask-head"><p class="action-label">Underoppgaver</p><span id="subtaskProgress"></span></div><div id="subtaskList"></div><div class="subtask-add"><input id="newSubtaskTitle" placeholder="Ny underoppgave …"><button id="addSubtask" type="button" aria-label="Legg til underoppgave">＋</button></div></div>
       <button class="delete-btn" id="deleteTask" type="button">Slett oppgave</button>
@@ -112,7 +113,7 @@
   </div>
 
   <div class="modal-backdrop" id="taskDeleteDialog" hidden>
-    <form class="task-modal confirm-dialog is-danger" id="taskDeleteDialogForm"><div class="modal-handle"></div><div class="dialog-icon">×</div><h2>Slett oppgave</h2><p id="taskDeleteDialogText"></p><div class="dialog-actions"><button class="secondary-btn" id="cancelTaskDelete" type="button">Avbryt</button><button class="primary-btn" type="submit">Ja, slett</button></div></form>
+    <form class="task-modal confirm-dialog is-danger" id="taskDeleteDialogForm"><div class="modal-handle"></div><div class="dialog-icon">×</div><h2>Slett oppgave</h2><p id="taskDeleteDialogText"></p><div class="dialog-actions"><button class="secondary-btn" id="cancelTaskDelete" type="button">Avbryt</button><button class="primary-btn" id="confirmTaskDelete" type="submit">Ja, slett</button></div></form>
   </div>
 
   <div class="modal-backdrop" id="usersModal" hidden>
@@ -123,13 +124,13 @@
 
   <div class="modal-backdrop" id="assigneeDialog" hidden><div class="task-modal assignee-sheet"><div class="modal-handle"></div><div class="modal-head"><div><p class="eyebrow">UNDEROPPGAVE</p><h2>Tildel personer</h2></div><button type="button" class="close-btn" id="closeAssignees">×</button></div><div id="assigneeList"></div><button class="primary-btn" id="saveAssignees" type="button">Ferdig</button></div></div>
 
-  <div class="modal-backdrop" id="milestoneModal" hidden><form class="task-modal milestone-modal" id="milestoneForm"><div class="modal-handle"></div><div class="modal-head"><div><p class="eyebrow">ROADMAP</p><h2 id="milestoneModalTitle">Ny milepæl</h2></div><button type="button" class="close-btn" id="closeMilestone">×</button></div><label for="milestoneName">Navn</label><input id="milestoneName" maxlength="60" required><label for="milestoneDeadline">Frist</label><input id="milestoneDeadline" type="date"><label>Koble til oppgaver</label><div class="milestone-task-list" id="milestoneTasks"></div><div class="milestone-actions"><button class="delete-btn" id="deleteMilestone" type="button" hidden>Slett milepæl</button><button class="primary-btn" type="submit">Lagre milepæl</button></div></form></div>
+  <div class="modal-backdrop" id="milestoneModal" hidden><form class="task-modal milestone-modal" id="milestoneForm"><div class="modal-handle"></div><div class="modal-head"><div><p class="eyebrow">ROADMAP</p><h2 id="milestoneModalTitle">Ny milepæl</h2></div><button type="button" class="close-btn" id="closeMilestone">×</button></div><label for="milestoneName">Navn</label><input id="milestoneName" maxlength="60" required><label for="milestoneDeadline">Frist</label><input id="milestoneDeadline" type="date"><div class="milestone-picker-head"><label for="milestoneTaskSearch">Koble til oppgaver</label><strong id="milestoneSelectedCount">0 valgt</strong></div><div class="milestone-picker-tools"><input id="milestoneTaskSearch" type="search" placeholder="Søk etter oppgave…"><select id="milestoneTaskStatus" aria-label="Filtrer etter status"><option value="all">Alle statuser</option><option value="ideas">Oppgaver</option><option value="doing">Under arbeid</option><option value="next">Venter</option><option value="done">Ferdig</option></select></div><div class="milestone-task-list" id="milestoneTasks"></div><div class="milestone-actions"><button class="delete-btn" id="deleteMilestone" type="button" hidden>Slett milepæl</button><button class="primary-btn" type="submit">Lagre milepæl</button></div></form></div>
 
   <div class="toast" id="toast" role="status"></div>
   <div class="auth-screen" id="authScreen">
     <form class="auth-card" id="loginForm"><span class="brand-mark">L</span><p class="eyebrow">LORD'S KANDAN BOARD</p><h1>Logg inn</h1><p class="auth-copy">Skriv inn e-postadressen din. Du får en sikker innloggingslenke på e-post.</p><label for="loginEmail">E-post</label><input id="loginEmail" type="email" autocomplete="email" placeholder="navn@eksempel.no" required><button class="primary-btn" type="submit">Send innloggingslenke</button><p class="auth-status" id="authStatus"></p></form>
   </div>
   <script src="supabase-config.js?v=20260715-2"></script>
-  <script src="app.js?v=20260716-1"></script>
+  <script src="app.js?v=20260716-2"></script>
 </body>
 </html>
